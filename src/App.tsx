@@ -211,8 +211,6 @@ function App() {
     setCode(newCode);
   };
 
-  const lastFoundClue = foundClues.length > 0 ? clues.find(c => c.code === foundClues[foundClues.length - 1]) : null;
-
   return (
     <main className='flex-1 w-full min-h-screen flex-col items-center justify-between p-2 md:p-4 max-w-[800px] mx-auto'>
       <header className="w-full sticky top-0 z-10 bg-white dark:bg-gray-800">
