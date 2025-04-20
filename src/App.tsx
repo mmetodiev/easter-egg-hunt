@@ -6,108 +6,276 @@ import {
   UserCircle, 
   KeyRound 
 } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 
 function App() {
-  const logo = "/selfweapp/images/logo.png";
+  const [code, setCode] = useState('');
+  const [foundClues, setFoundClues] = useState<string[]>([]);
+  const [error, setError] = useState('');
+  const [currentHint, setCurrentHint] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const clues = [
+    {
+      "code": "SHWR",
+      "hint": "I am hiding in a shower"
+    },
+    {
+      "code": "BATH",
+      "hint": "I am hiding in a shower"
+    },
+    {
+      "code": "FOAM",
+      "hint": "I am hiding in a shower"
+    },
+    {
+      "code": "TREF",
+      "hint": "I am hiding near a tree in front of the house"
+    },
+    {
+      "code": "PINE",
+      "hint": "I am hiding near a tree in front of the house"
+    },
+    {
+      "code": "TREB",
+      "hint": "I am hiding near a tree behind the house"
+    },
+    {
+      "code": "BARK",
+      "hint": "I am hiding near a tree behind the house"
+    },
+    {
+      "code": "BUSH",
+      "hint": "I am hiding in a bush behind the house"
+    },
+    {
+      "code": "SHRB",
+      "hint": "I am hiding in a bush behind the house"
+    },
+    {
+      "code": "BSHF",
+      "hint": "I am hiding in a bush in front of the house"
+    },
+    {
+      "code": "LEAF",
+      "hint": "I am hiding in a bush in front of the house"
+    },
+    {
+      "code": "UBED",
+      "hint": "I am hiding under your bed"
+    },
+    {
+      "code": "DUST",
+      "hint": "I am hiding under your bed"
+    },
+    {
+      "code": "PILW",
+      "hint": "I am hiding under your pillow"
+    },
+    {
+      "code": "SOFT",
+      "hint": "I am hiding under your pillow"
+    },
+    {
+      "code": "WCSH",
+      "hint": "I am hiding under a pillow on the white couch"
+    },
+    {
+      "code": "GCSH",
+      "hint": "I am hiding under a pillow on the grey couch"
+    },
+    {
+      "code": "REFG",
+      "hint": "I am hiding in the refrigerator in the garage"
+    },
+    {
+      "code": "REFK",
+      "hint": "I am hiding in the refrigerator in the kitchen"
+    },
+    {
+      "code": "REFO",
+      "hint": "I am hiding in the refrigerator in the office"
+    },
+    {
+      "code": "DROF",
+      "hint": "I am hiding behind the door of the office"
+    },
+    {
+      "code": "DRRM",
+      "hint": "I am hiding behind the door of your room"
+    },
+    {
+      "code": "DRBR",
+      "hint": "I am hiding behind the door of your bathroom"
+    },
+    {
+      "code": "DRLN",
+      "hint": "I am hiding behind the door of the laundry room"
+    },
+    {
+      "code": "DRMM",
+      "hint": "I am hiding behind the door of mommy's room"
+    },
+    {
+      "code": "DRDD",
+      "hint": "I am hiding behind the door of daddy's room"
+    },
+    {
+      "code": "TBLW",
+      "hint": "I am hiding under the table by the white couch"
+    },
+    {
+      "code": "OVEN",
+      "hint": "I am hiding in the oven"
+    },
+    {
+      "code": "MCRW",
+      "hint": "I am hiding in the microwave"
+    },
+    {
+      "code": "DISH",
+      "hint": "I am hiding in the dishwasher"
+    },
+    {
+      "code": "WASH",
+      "hint": "I am hiding in the washing machine"
+    },
+    {
+      "code": "DRYR",
+      "hint": "I am hiding in the dryer"
+    },
+    {
+      "code": "OUTC",
+      "hint": "I am hiding under a pillow in the outside couch"
+    },
+    {
+      "code": "DGHZ",
+      "hint": "I am hiding in the dog house"
+    },
+    {
+      "code": "UNWC",
+      "hint": "I am hiding under the white couch"
+    },
+    {
+      "code": "UNGC",
+      "hint": "I am hiding under the grey couch"
+    },
+    {
+      "code": "UNDC",
+      "hint": "I am hiding under the daddy's couch"
+    },
+    {
+      "code": "DSKO",
+      "hint": "I am hiding in the desk in the office"
+    },
+    {
+      "code": "DFIL",
+      "hint": "I am hiding in the desk in the office"
+    },
+    {
+      "code": "DRAW",
+      "hint": "I am hiding in the desk in the office"
+    },
+    {
+      "code": "KDRW",
+      "hint": "I am hiding in a drawer in the kitchen"
+    },
+    {
+      "code": "UTSL",
+      "hint": "I am hiding in a drawer in the kitchen"
+    },
+    {
+      "code": "SPON",
+      "hint": "I am hiding in a drawer in the kitchen"
+    }
+  ]
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  });
+
+  const handleCodeSubmit = () => {
+    const foundClue = clues.find(clue => clue.code === code);
+    if (foundClue) {
+      if (!foundClues.includes(code)) {
+        setFoundClues([...foundClues, code]);
+      }
+      setError('');
+      setCurrentHint(foundClue.hint);
+    } else {
+      setError('Code not found. Try another one!');
+      setCurrentHint('');
+    }
+    setCode('');
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
+  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newCode = e.target.value.toUpperCase();
+    setCode(newCode);
+  };
+
+  const lastFoundClue = foundClues.length > 0 ? clues.find(c => c.code === foundClues[foundClues.length - 1]) : null;
 
   return (
-    <main className='flex-1 w-full min-h-screen flex-col items-center justify-between p-4 md:p-8 lg:p-12 max-w-[1200px] mx-auto'>
-      <header className="w-full">
-        <nav className="bg-white border-gray-200 px-4 py-2.5 dark:bg-gray-800">
-          <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-            <a href="/" className="flex items-center">
-              <img src={logo} className="mr-3 h-12" alt="Selfwe Logo" />
-              <span className="self-center text-3xl font-extrabold whitespace-nowrap dark:text-white">SELFWE</span>
-            </a>
-
+    <main className='flex-1 w-full min-h-screen flex-col items-center justify-between p-2 md:p-4 max-w-[800px] mx-auto'>
+      <header className="w-full sticky top-0 z-10 bg-white dark:bg-gray-800">
+        <nav className="border-gray-200 px-2 py-2">
+          <div className="flex flex-wrap justify-between items-center mx-auto">
+            <span className="self-center text-3xl md:text-4xl font-extrabold whitespace-nowrap dark:text-white">
+              Egg Hunt Challenge 2025
+            </span>
           </div>
         </nav>
       </header>
 
-      <section className="bg-white dark:bg-gray-900 w-full">
-        <div className="grid px-4 py-6 mx-auto lg:gap-8 xl:gap-0 lg:py-12 lg:grid-cols-12 border-1 border-gray-200 rounded-xl shadow-lg my-4 md:my-6">
-          <div className="mr-auto place-self-center lg:col-span-7">
-            <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">Share Moments, Create Together</h1>
-            <p className="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
-              Selfwe brings friends and family closer, no matter the distance. Create beautiful photo collages together in real-time and turn everyday moments into shared masterpieces that everyone can contribute to.
-            </p>
+      <section className="bg-white dark:bg-gray-900 w-full px-4 md:px-8 py-6 md:py-8">
+        <div className="space-y-6 md:space-y-8">
+          <p className="text-xl md:text-2xl font-medium text-gray-700">
+            1. Draw a ticket from the magic hat
+          </p>
+          <p className="text-xl md:text-2xl font-medium text-gray-700">
+            2. Enter the code to unlock the next clue
+          </p>
+          
+          <div className="space-y-6 md:space-y-8">
+            <input
+              ref={inputRef}
+              type="text" 
+              maxLength={4}
+              value={code}
+              autoFocus
+              className="w-full p-3 md:p-4 text-4xl md:text-5xl font-medium text-center tracking-[1em] border-2 border-gray-300 rounded-lg focus:outline-none focus:border-primary-500"
+              placeholder="____"
+              onChange={handleCodeChange}
+            />
+            
+            {error && (
+              <p className="text-red-500 text-lg md:text-xl">{error}</p>
+            )}
 
-            <a href="#" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-              Start Creating Together
-            </a>
-          </div>
-          <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
-            <img src="/selfweapp/images/iso.png" alt="Friends creating a collage together" />
-          </div>
-        </div>
-      </section>
+            <button 
+              onClick={handleCodeSubmit}
+              className="w-full p-3 md:p-4 text-xl md:text-2xl font-medium text-center bg-blue-600 text-white rounded-lg focus:outline-none hover:bg-blue-700 transition-colors"
+            >
+              Submit Code
+            </button>
 
-      <section className="bg-white dark:bg-gray-900 w-full">
-        <div className="py-6 px-4 mx-auto sm:py-12 lg:px-6">
-          <div className="max-w-screen-md mb-8 lg:mb-16">
-            <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Sharing Photos is Fun. Creating Together is Magical.</h2>
-            <p className="text-gray-500 sm:text-xl dark:text-gray-400">Transform how you connect with loved ones by building beautiful memories together, even when you're miles apart.</p>
-          </div>
-          <div className="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
-            <div className="p-6 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
-              <div className="relative flex justify-center items-center mb-6">
-                <div className="absolute w-20 h-20 rounded-full bg-primary-100 dark:bg-primary-900"></div>
-                <div className="relative flex justify-center items-center w-16 h-16">
-                  <MonitorPlay size={36} strokeWidth={1.25} className="text-primary-600 dark:text-primary-300" />
+            <div className="space-y-4">
+              <p className="text-xl md:text-2xl font-medium">
+                Found Clues: {foundClues.length} / {clues.length}
+              </p>
+              {currentHint && (
+                <div className="p-4 bg-green-600 rounded-lg">
+                  <p className="text-2xl md:text-3xl font-bold text-white">
+                    {currentHint}
+                  </p>
                 </div>
-              </div>
-              <h3 className="mb-3 text-xl font-bold dark:text-white">Create Together, Live</h3>
-              <p className="text-gray-500 dark:text-gray-400">Watch your collage come to life as friends and family add their photos in real-time – it's like being in the same room, crafting memories together.</p>
-            </div>
-            <div className="p-6 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
-              <div className="relative flex justify-center items-center mb-6">
-                <div className="absolute w-20 h-20 rounded-full bg-primary-100 dark:bg-primary-900"></div>
-                <div className="relative flex justify-center items-center w-16 h-16">
-                  <ImageIcon size={36} strokeWidth={1.25} className="text-primary-600 dark:text-primary-300" />
-                </div>
-              </div>
-              <h3 className="mb-3 text-xl font-bold dark:text-white">Simple, Playful Editing</h3>
-              <p className="text-gray-500 dark:text-gray-400">Arrange, resize, and style photos with intuitive tools that make creative collaboration effortless and fun for everyone.</p>
-            </div>
-            <div className="p-6 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
-              <div className="relative flex justify-center items-center mb-6">
-                <div className="absolute w-20 h-20 rounded-full bg-primary-100 dark:bg-primary-900"></div>
-                <div className="relative flex justify-center items-center w-16 h-16">
-                  <Users size={36} strokeWidth={1.25} className="text-primary-600 dark:text-primary-300" />
-                </div>
-              </div>
-              <h3 className="mb-3 text-xl font-bold dark:text-white">Staying Connected</h3>
-              <p className="text-gray-500 dark:text-gray-400">Share moments that matter with the people who matter most – whether they're across town or across the world.</p>
-            </div>
-            <div className="p-6 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
-              <div className="relative flex justify-center items-center mb-6">
-                <div className="absolute w-20 h-20 rounded-full bg-primary-100 dark:bg-primary-900"></div>
-                <div className="relative flex justify-center items-center w-16 h-16">
-                  <Zap size={36} strokeWidth={1.25} className="text-primary-600 dark:text-primary-300" />
-                </div>
-              </div>
-              <h3 className="mb-3 text-xl font-bold dark:text-white">Instant Collaboration</h3>
-              <p className="text-gray-500 dark:text-gray-400">Experience the joy of creating together in real-time – see each addition appear instantly as your shared artwork evolves.</p>
-            </div>
-            <div className="p-6 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
-              <div className="relative flex justify-center items-center mb-6">
-                <div className="absolute w-20 h-20 rounded-full bg-primary-100 dark:bg-primary-900"></div>
-                <div className="relative flex justify-center items-center w-16 h-16">
-                  <UserCircle size={36} strokeWidth={1.25} className="text-primary-600 dark:text-primary-300" />
-                </div>
-              </div>
-              <h3 className="mb-3 text-xl font-bold dark:text-white">Your Creative Community</h3>
-              <p className="text-gray-500 dark:text-gray-400">Build your personal gallery of shared creations and discover inspiration from other collaborative artists in the community.</p>
-            </div>
-            <div className="p-6 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
-              <div className="relative flex justify-center items-center mb-6">
-                <div className="absolute w-20 h-20 rounded-full bg-primary-100 dark:bg-primary-900"></div>
-                <div className="relative flex justify-center items-center w-16 h-16">
-                  <KeyRound size={36} strokeWidth={1.25} className="text-primary-600 dark:text-primary-300" />
-                </div>
-              </div>
-              <h3 className="mb-3 text-xl font-bold dark:text-white">Quick Start, More Fun</h3>
-              <p className="text-gray-500 dark:text-gray-400">Sign in with a single click and start creating together in seconds – because sharing moments should be simple.</p>
+              )}
             </div>
           </div>
         </div>
